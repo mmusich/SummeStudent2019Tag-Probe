@@ -52,6 +52,7 @@ void myReader::Loop()
    TH1F *invM = new TH1F("invM","Invariant Mass of Z costructed from T&P Muons",100,0,180);
    TH1F *delta_R= new TH1F("delta_R","#Delta R of probe muons and tracks ",100,0,6);
    TCanvas *c1 = new TCanvas("c1", "Z boson invM",800,600);
+   TCanvas *c2 = new TCanvas("c2", "#Delta R of probe and track",800,600);
    if (fChain == 0) return;
    Long64_t nentries = fChain->GetEntriesFast(); 
    Long64_t nbytes = 0, nb = 0;
@@ -88,6 +89,7 @@ void myReader::Loop()
        if (deltaR >0.5) {
 	 Zboson = gMuon + sMuon;
 	 theInvariantMass =Zboson.M();
+	 invM->Fill(theInvariantMass);
        }
        if (  theInvariantMass >=86 &&  theInvariantMass  <= 101 ) {numberofZ = numberofZ+1;};
        break;
@@ -99,6 +101,7 @@ void myReader::Loop()
 	 if((*tree_track_pt)[k] < 15.)  continue;
 	 track.SetPtEtaPhiM( (*tree_track_pt)[k], (*tree_track_eta)[k], (*tree_track_phi)[k],0);
 	 dR= sMuon.DeltaR(track);
+	 delta_R->Fill(dR);
 	 if(dR< 0.1)  {numberofZ_withMatchedProbe = numberofZ_withMatchedProbe+1;};
        } 
      }
@@ -106,4 +109,12 @@ void myReader::Loop()
    cout << numberofZ << ";" << numberofZ_withMatchedProbe << endl;
    double efficiency = numberofZ_withMatchedProbe /numberofZ;
    cout << "Efficiency : " << efficiency << endl;
+  
+  myfile->WriteTObject(c1);
+  myfile->WriteTObject(c2);
+  myfile->Draw();
+  c1->SaveAs("invM_ZBoson.pdf","pdf");
+  invM->Draw();
+  c2->SaveAs("deltaR_probe_track.pdf","pdf");
+  delta_R->Draw();
 } 
