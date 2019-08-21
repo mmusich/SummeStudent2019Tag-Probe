@@ -122,7 +122,7 @@ void myReader::Loop(){
 		theInvariantMass_sim = Zboson_sim.M();
       
 		if ( theInvariantMass_sim >= 86 && theInvariantMass_sim <= 101& deltaR_sim < 0.1){
-			if ( ){
+			if (deltaR_sim < 0.1 ){
 			pT_matched_sim.Fill(track_sim.Pt());	
 				check_passing++;
 			}
