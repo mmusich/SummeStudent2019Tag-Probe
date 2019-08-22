@@ -110,27 +110,29 @@ void myReader::Loop(){
 	
 	
     
-    // for simulation
-    for (unsigned int f = 0 ;  f < tree_track_simtrack_pt ->size(); f++) {      
-      if (tree_track_simtrack_pt->at(f) < 15.) 
-	continue; 
+    // for (unsigned int f = 0 ; f < tree_simtrack_simtrack_pt ->size(); f++) { 
+      if (tree_simtrack_simtrack_pt->at(f) < 25.) continue; 
+    
+	    TLorentzVector track1,track2;
+		if (tree_simtrack_simtrack_pt->size() == 2){
+		track1.SetPtEtaPhiM( tree_simtrack_simtrack_pt->at(0), tree_simtrack_simtrack_eta->at(0), tree_simtrack_simtrack_phi->at(0), 0);
+		track2.SetPtEtaPhiM( tree_simtrack_simtrack_pt->at(1), tree_simtrack_simtrack_eta->at(1), tree_simtrack_simtrack_phi->at(1), 0);
 		
+		Zboson_sim = track1+track2;
+		theInvariantMass_sim =Zboson_sim.M();
+		}
 		
-		track_sim.SetPtEtaPhiM( tree_track_simtrack_pt->at(f), tree_track_simtrack_eta->at(f), tree_track_simtrack_phi->at(f), 0);
-		double deltaR_sim = track_sim.DeltaR(gMuon);
-		Zboson_sim = gMuon +track_sim;
-		theInvariantMass_sim = Zboson_sim.M();
-      
-		if ( theInvariantMass_sim >= 86 && theInvariantMass_sim <= 101& deltaR_sim < 0.1){
-			if (deltaR_sim < 0.1 ){
-			pT_matched_sim.Fill(track_sim.Pt());	
-				check_passing++;
+		if(theInvariantMass_sim >=86 && theInvariantMass_sim  <= 101){
+			if(tree_simtrack_isRecoMatched->at(f)== true) {
+				check_passing ++ ;
 			}
-		}// inv Mass cut for simulation
-     
-    } // end of simulation loop
+		}
 		
-       cout << check_passing << ";" << check_total << endl;
+	}// end of simulation loop	   
+    }//loop over tree simulation
+    
+		
+    
     }//loop over tree
   
 	//TEfficiency calculation for data
