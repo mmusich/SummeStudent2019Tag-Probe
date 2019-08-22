@@ -125,6 +125,7 @@ void myReader::Loop(){
 		if(theInvariantMass_sim >=86 && theInvariantMass_sim  <= 101){
 			if(tree_simtrack_isRecoMatched->at(f)== true) {
 				check_passing ++ ;
+				break; // to stop the loop once a match is found
 			}
 		}
 		
